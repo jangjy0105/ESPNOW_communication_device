@@ -20,10 +20,11 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
-#include "extern.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "extern.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,6 +44,7 @@
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
+UART_HandleTypeDef huart6;
 
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -58,14 +60,24 @@ const osThreadAttr_t myTask02_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
-/* Definitions for myMutex01 */
-osMutexId_t myMutex01Handle;
-const osMutexAttr_t myMutex01_attributes = {
-  .name = "myMutex01"
+/* Definitions for myTask03 */
+osThreadId_t myTask03Handle;
+const osThreadAttr_t myTask03_attributes = {
+  .name = "myTask03",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for myTask04 */
+osThreadId_t myTask04Handle;
+const osThreadAttr_t myTask04_attributes = {
+  .name = "myTask04",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
 };
 /* USER CODE BEGIN PV */
 uint8_t uart1_rx_data;
 uint8_t uart2_rx_data;
+uint8_t uart6_rx_data;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -73,8 +85,11 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_USART1_UART_Init(void);
+static void MX_USART6_UART_Init(void);
 void StartDefaultTask(void *argument);
 void StartTask02(void *argument);
+void StartTask03(void *argument);
+void StartTask04(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -82,27 +97,6 @@ void StartTask02(void *argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-#ifdef __GNUC__    // Add for printf
-/* With GCC, small printf (option LD Linker->Libraries->Small printf
-   set to 'Yes') calls __io_putchar() */
-#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
-#else
-#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-#endif /* __GNUC__ */
-/**
-  * @brief  Retargets the C library printf function to the USART.
-  * @param  None
-  * @retval None
-  */
-PUTCHAR_PROTOTYPE   // Add for printf
-{
-  /* Place your implementation of fputc here */
-  /* e.g. write a character to the USART3 and Loop until the end of transmission */
-  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 0xFFFF);
-
-  return ch;
-}
 /* USER CODE END 0 */
 
 /**
@@ -134,17 +128,60 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   MX_USART1_UART_Init();
+  MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT(&huart1, &uart1_rx_data, 1);
   HAL_UART_Receive_IT(&huart2, &uart2_rx_data, 1);
+  HAL_UART_Receive_IT(&huart6, &uart6_rx_data, 1);
 
+  while(1)
+  {
+	  if (uart1_front != uart1_rear)
+	  // {
+		 //  HAL_UART_Transmit(&huart2, (uint8_t*)uart1_rx_buff[uart1_front], 5, 100);
+		 //  HAL_UART_Transmit(&huart2, (uint8_t*)"\n", 1, 100);
+		 //  HAL_UART_Transmit(&huart6, (uint8_t*)uart1_rx_buff[uart1_front], 5, 100);
+		 //  HAL_UART_Transmit(&huart6, (uint8_t*)"\n", 1, 100);
+		  if ( strncmp( (const char *)uart1_rx_buff[uart1_front++], "start", strlen("start") ) == 0 ) break;
+	  }
+	  // HAL_UART_Transmit(&huart2, (uint8_t*)"waiting start... \n", strlen("waiting start... \n"), 100);
+	  HAL_Delay(50);
+  }
+
+  while(1)
+  {
+	  if (uart6_front != uart6_rear)
+	  {
+		  if ( uart6_rx_buff[uart6_front][0] == PLATE_INIT )
+		  {
+			  HAL_UART_Transmit(&huart1, (uint8_t*)uart6_rx_buff[uart6_front], strlen((char *)uart6_rx_buff[uart6_front]), 100);
+			  HAL_UART_Transmit(&huart1, (uint8_t*)"\n", 1, 100);
+			  uart6_front++;
+			  break;
+		  }
+		  else uart6_front++;
+	  }
+	  HAL_Delay(50);
+  }
+
+  while(1)
+  {
+	  if (uart1_front != uart1_rear)
+	  {
+		  // HAL_UART_Transmit(&huart2, (uint8_t*)uart1_rx_buff[uart1_front], 5, 100);
+		  // HAL_UART_Transmit(&huart2, (uint8_t*)"\n", 1, 100);
+		  if ( strncmp( (const char *)uart1_rx_buff[uart1_front++], "setup done", strlen("setup done") ) == 0 ) break;
+	  }
+	  // HAL_UART_Transmit(&huart2, (uint8_t*)"waiting setup done... \n", strlen("waiting setup done... \n"), 100);
+	  HAL_Delay(50);
+  }
+
+//  __enable_irq();
+//  HAL_Delay(200);
   /* USER CODE END 2 */
 
   /* Init scheduler */
   osKernelInitialize();
-  /* Create the mutex(es) */
-  /* creation of myMutex01 */
-  myMutex01Handle = osMutexNew(&myMutex01_attributes);
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -168,6 +205,12 @@ int main(void)
 
   /* creation of myTask02 */
   myTask02Handle = osThreadNew(StartTask02, NULL, &myTask02_attributes);
+
+  /* creation of myTask03 */
+  myTask03Handle = osThreadNew(StartTask03, NULL, &myTask03_attributes);
+
+  /* creation of myTask04 */
+  myTask04Handle = osThreadNew(StartTask04, NULL, &myTask04_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -303,6 +346,39 @@ static void MX_USART2_UART_Init(void)
 }
 
 /**
+  * @brief USART6 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART6_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART6_Init 0 */
+
+  /* USER CODE END USART6_Init 0 */
+
+  /* USER CODE BEGIN USART6_Init 1 */
+
+  /* USER CODE END USART6_Init 1 */
+  huart6.Instance = USART6;
+  huart6.Init.BaudRate = 115200;
+  huart6.Init.WordLength = UART_WORDLENGTH_8B;
+  huart6.Init.StopBits = UART_STOPBITS_1;
+  huart6.Init.Parity = UART_PARITY_NONE;
+  huart6.Init.Mode = UART_MODE_TX_RX;
+  huart6.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart6.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart6) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART6_Init 2 */
+
+  /* USER CODE END USART6_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -318,7 +394,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LD2_Pin|GPIO_PIN_15, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
@@ -326,12 +402,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : LD2_Pin */
-  GPIO_InitStruct.Pin = LD2_Pin;
+  /*Configure GPIO pins : LD2_Pin PA15 */
+  GPIO_InitStruct.Pin = LD2_Pin|GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
 
@@ -353,7 +429,7 @@ void StartDefaultTask(void *argument)
   for(;;)
   {
 	uart1_processing();
-    osDelay(1);
+	osDelay(1);
   }
   /* USER CODE END 5 */
 }
@@ -371,10 +447,56 @@ void StartTask02(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	uart2_processing();
-    osDelay(1);
+	uart6_processing();
+    	osDelay(1);
   }
   /* USER CODE END StartTask02 */
+}
+
+/* USER CODE BEGIN Header_StartTask03 */
+/**
+* @brief Function implementing the myTask03 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask03 */
+void StartTask03(void *argument)
+{
+  /* USER CODE BEGIN StartTask03 */
+  /* Infinite loop */
+  for(;;)
+  {
+	  char h = PEER;
+	  HAL_UART_Transmit(&huart1, (uint8_t *)&h, 1, 100);
+	  HAL_UART_Transmit(&huart1, (uint8_t *)"\n", 1, 100);
+	  osDelay(1000);
+
+	  h = ADV;
+	  HAL_UART_Transmit(&huart1, (uint8_t *)&h, 1, 100);
+	  HAL_UART_Transmit(&huart1, (uint8_t *)"\n", 1, 100);
+	  osDelay(1000);
+  }
+  /* USER CODE END StartTask03 */
+}
+
+/* USER CODE BEGIN Header_StartTask04 */
+/**
+* @brief Function implementing the myTask04 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask04 */
+void StartTask04(void *argument)
+{
+  /* USER CODE BEGIN StartTask04 */
+  /* Infinite loop */
+  for(;;)
+  {
+//	  HAL_UART_Transmit(&huart2, (uint8_t*)"4", strlen("4"), HAL_MAX_DELAY);
+//	  HAL_UART_Transmit(&huart1, (uint8_t*)"[LIST]\n", strlen("[LIST]\n"), HAL_MAX_DELAY);
+	  osDelay(100000);
+  }
+  /* USER CODE END StartTask04 */
 }
 
 /**
