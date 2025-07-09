@@ -159,13 +159,13 @@ int main(void)
   {
 	  if (uart1_front != uart1_rear)
 	  {
-		  HAL_UART_Transmit(&huart2, (uint8_t*)uart1_rx_buff[uart1_front], 5, 100);
-		  HAL_UART_Transmit(&huart2, (uint8_t*)"\n", 1, 100);
-		  HAL_UART_Transmit(&huart6, (uint8_t*)uart1_rx_buff[uart1_front], 5, 100);
-		  HAL_UART_Transmit(&huart6, (uint8_t*)"\n", 1, 100);
+		  // HAL_UART_Transmit(&huart2, (uint8_t*)uart1_rx_buff[uart1_front], 5, 100);
+		  // HAL_UART_Transmit(&huart2, (uint8_t*)"\n", 1, 100);
+		  // HAL_UART_Transmit(&huart6, (uint8_t*)uart1_rx_buff[uart1_front], 5, 100);
+		  // HAL_UART_Transmit(&huart6, (uint8_t*)"\n", 1, 100);
 		  if ( strncmp( (const char *)uart1_rx_buff[uart1_front++], "start", strlen("start") ) == 0 ) break;
 	  }
-	  HAL_UART_Transmit(&huart2, (uint8_t*)"waiting start... \n", strlen("waiting start... \n"), 100);
+	  // HAL_UART_Transmit(&huart2, (uint8_t*)"waiting start... \n", strlen("waiting start... \n"), 100);
 	  HAL_Delay(50);
   }
 
@@ -204,11 +204,11 @@ int main(void)
   {
 	  if (uart1_front != uart1_rear)
 	  {
-		  HAL_UART_Transmit(&huart2, (uint8_t*)uart1_rx_buff[uart1_front], 5, 100);
-		  HAL_UART_Transmit(&huart2, (uint8_t*)"\n", 1, 100);
+		  // HAL_UART_Transmit(&huart2, (uint8_t*)uart1_rx_buff[uart1_front], 5, 100);
+		  // HAL_UART_Transmit(&huart2, (uint8_t*)"\n", 1, 100);
 		  if ( strncmp( (const char *)uart1_rx_buff[uart1_front++], "setup done", strlen("setup done") ) == 0 ) break;
 	  }
-	  HAL_UART_Transmit(&huart2, (uint8_t*)"waiting setup done... \n", strlen("waiting setup done... \n"), 100);
+	  // HAL_UART_Transmit(&huart2, (uint8_t*)"waiting setup done... \n", strlen("waiting setup done... \n"), 100);
 	  HAL_Delay(50);
   }
 
@@ -484,7 +484,7 @@ void StartTask02(void *argument)
   for(;;)
   {
 	uart6_processing();
-    osDelay(1);
+    	osDelay(1);
   }
   /* USER CODE END StartTask02 */
 }
