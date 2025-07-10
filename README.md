@@ -58,7 +58,7 @@ PyQt 기반의 GUI를 통해 터치스크린에서 직관적인 조작이 가능
 | SBC       | Raspberry Pi 4 |
 | GUI       | PyQt5 (Python) |
 | 음성 처리  | Openai-Whisper (STT), pyttsx3 (TTS) |
-| 인터페이스 | UART, 터치스크린, USB 마이크/스피커 |
+| 인터페이스 | 터치스크린, USB 마이크/스피커 |
 
 ---
 
