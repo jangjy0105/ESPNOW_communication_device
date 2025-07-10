@@ -43,7 +43,7 @@ static uint8_t broadcastAddress[6] = {
 
 void setup() {
   // 부팅 직후 안정화 대기
-  delay(500);
+  delay(5000);
 
   Serial.begin(UART_BAUD);
   Serial.setTimeout(100);
