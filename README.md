@@ -22,7 +22,7 @@ PyQt 기반의 GUI를 통해 터치스크린에서 직관적인 조작이 가능
   - UART를 통해 STM32와 통신
 
 - **STM32**  
-  - 음성 명령 제어, 상태 LED 제어 등의 보조 MCU 역할
+  - FreeRTOS 기반으로 명령 제어
   - ESP-01과 Raspberry Pi 간 UART 중계
 
 - **Raspberry Pi**  
