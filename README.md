@@ -31,8 +31,9 @@
     - 보드 간: **UART**
     - 디바이스 간: **ESP-NOW**
 
-![시스템 구성도](https://via.placeholder.com/600x400.png?text=System+Diagram+Here) 
-*참고: 위 이미지는 예시이며, 실제 프로젝트의 구성 다이어그램 이미지로 교체하여 사용하세요.*
+<img width="773" height="576" alt="image" src="https://github.com/user-attachments/assets/7618a7a0-737c-4305-b599-93293f2e2fb1" />
+
+
 
 ---
 
@@ -67,7 +68,7 @@
 ---
 
 ## 4. 결과 및 시연 영상
-- 아래 링크에서 프로젝트 시연 영상을 확인할 수 있습니다.
+![통신디바이스](https://github.com/user-attachments/assets/cbd59949-d0b5-499e-8b9f-2b332891d670)
 - [프로젝트 시연 영상 링크](https://www.youtube.com/watch?v=OlyLxImdYlo)
 
 ---
