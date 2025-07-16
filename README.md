@@ -43,9 +43,10 @@ PyQt 기반의 GUI를 통해 터치스크린에서 직관적인 조작이 가능
 
 ---
 
-## 📷 시연 이미지
+## 📷 시연 이미지 및 영상
 
 ![통신디바이스](https://github.com/user-attachments/assets/9075feef-23d8-43a8-9340-cbb46f8ee509)
+https://www.youtube.com/watch?v=OlyLxImdYlo
 
 ---
 
