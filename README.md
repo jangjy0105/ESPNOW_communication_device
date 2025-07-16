@@ -69,7 +69,7 @@
 
 ## 4. 결과 및 시연 영상
 ![통신디바이스](https://github.com/user-attachments/assets/cbd59949-d0b5-499e-8b9f-2b332891d670)
-- [프로젝트 시연 영상 링크](https://www.youtube.com/watch?v=OlyLxImdYlo)
+- [시연 영상](https://www.youtube.com/watch?v=OlyLxImdYlo)
 
 ---
 
