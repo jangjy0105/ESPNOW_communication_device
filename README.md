@@ -54,12 +54,12 @@ https://www.youtube.com/watch?v=OlyLxImdYlo
 
 | 구성 요소 | 사용 도구/보드 |
 |-----------|----------------|
-| MCU       | STM32F411RE  |
-| Wi-Fi     | ESP8266 (ESP-01) |
-| SBC       | Raspberry Pi 4 |
-| GUI       | PyQt5 (Python) |
-| 음성 처리  | Openai-Whisper (STT), pyttsx3 (TTS) |
-| 인터페이스 | 터치스크린, USB 마이크/스피커 |
+| MCU             | STM32F411RE  |
+| Communication   | ESP8266 (ESP-01) |
+| SBC             | Raspberry Pi 4 |
+| GUI             | PyQt5 (Python) |
+| 음성 처리        | Openai-Whisper (STT), pyttsx3 (TTS) |
+| 인터페이스       | 터치스크린, USB 마이크/스피커 |
 
 ---
 
