@@ -336,14 +336,14 @@ uint8_t generate_packet(uint8_t *packet)    // 패킷(페이로드) 끝에 crc16
 }
 
 uint16_t crc16(const uint8_t *data, size_t length) {    // crc16 계산  함수
-  uint16_t crc = 0xFFFF;
+  uint16_t crc = 0xFFFF;                  
   for (size_t i = 0; i < length; i++) {
-    crc ^= data[i];
+    crc ^= data[i];  
     for (uint8_t j = 0; j < 8; j++) {
-      if (crc & 1)
-        crc = (crc >> 1) ^ 0xA001;
-      else
-        crc >>= 1;
+      if (crc & 1)    // crc 마지막비트가 1이면
+        crc = (crc >> 1) ^ 0xA001;    // 오른쪽으로 1칸 시프트 후 0xA001과 xor
+      else            // 아니면
+        crc >>= 1;    // 오른쪽 한칸 시프트
     }
   }
   return crc;
